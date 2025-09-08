@@ -165,3 +165,35 @@ cityInput.addEventListener("keyup", function (event) {
     else document.getElementById("locationName").innerHTML = "Enter a city name...";
   }
 });
+
+
+document.getElementById("resetBtn").addEventListener("click", function (event) {
+  event.preventDefault(); // Prevents page reload if reset button is <a>
+
+  // Clear input field (correct ID is "searchCity")
+  document.getElementById("searchCity").value = "";
+
+  // Reset main weather display
+  document.getElementById("locationName").innerHTML = "";
+  document.getElementById("temperatureValue").innerHTML = "";
+  document.getElementById("weatherType").innerHTML = "";
+
+  // Reset additional weather details
+  document.getElementById("realFeelAdditionalValue").innerHTML = "";
+  document.getElementById("windSpeedAdditionalValue").innerHTML = "";
+  document.getElementById("windDirectionAdditionalValue").innerHTML = "";
+  document.getElementById("visibilityAdditionalValue").innerHTML = "";
+  document.getElementById("pressureAdditionalValue").innerHTML = "";
+  document.getElementById("maxTemperatureAdditionalValue").innerHTML = "";
+  document.getElementById("minTemperatureAdditionalValue").innerHTML = "";
+  document.getElementById("humidityAdditionalValue").innerHTML = "";
+  document.getElementById("sunriseAdditionalValue").innerHTML = "";
+  document.getElementById("sunsetAdditionalValue").innerHTML = "";
+
+  // Clear forecast cards
+  document.getElementById("forecast-container").innerHTML = "";
+
+  // Optionally show default message
+  document.getElementById("locationName").innerHTML = "Enter a city to get weather details";
+});
+
