@@ -63,29 +63,34 @@ cityInput.addEventListener("keyup", function (event) {
 
     var cityInputValue = cityInput.value;
 
-    var apiKey = "b1fd6e14799699504191b6bdbcadfc35"; // Default
-    var unit = "metric";
-    var apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityInputValue}&appid=${apiKey}&units=${unit}`;
+    // Load configuration
+    var apiKey = window.CONFIG?.OPENWEATHER_API_KEY || "YOUR_API_KEY";
+    var unit = window.CONFIG?.API_UNITS || "metric";
+    var apiUrl = `${window.CONFIG?.API_BASE_URL || "https://api.openweathermap.org/data/2.5"}/weather?q=${cityInputValue}&appid=${apiKey}&units=${unit}`;
 
     if (cityInputValue != "") {
       async function getWeather() {
-        var response = await fetch(apiUrl);
-        var data = await response.json();
+        try {
+          var response = await fetch(apiUrl);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          var data = await response.json();
 
-        if (data.message != "city not found" && data.cod != "404") {
+        if (data.cod === 200 && data.main && data.weather) {
           var location = data.name;
           var temperature = data.main.temp;
           var weatherType = data.weather[0].description;
           var realFeel = data.main.feels_like;
-          var windSpeed = data.wind.speed;
-          var windDirection = data.wind.deg;
-          var visibility = data.visibility / 1000;
-          var pressure = data.main.pressure;
-          var maxTemperature = data.main.temp_max;
-          var minTemperature = data.main.temp_min;
-          var humidity = data.main.humidity;
-          var sunrise = data.sys.sunrise;
-          var sunset = data.sys.sunset;
+          var windSpeed = data.wind.speed || 0;
+          var windDirection = data.wind.deg || 0;
+          var visibility = (data.visibility || 0) / 1000;
+          var pressure = data.main.pressure || 0;
+          var maxTemperature = data.main.temp_max || 0;
+          var minTemperature = data.main.temp_min || 0;
+          var humidity = data.main.humidity || 0;
+          var sunrise = data.sys?.sunrise || 0;
+          var sunset = data.sys?.sunset || 0;
 
           fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityInputValue}&appid=${apiKey}`)
             .then(response => response.json())
@@ -152,12 +157,62 @@ cityInput.addEventListener("keyup", function (event) {
           document.getElementById("humidityAdditionalValue").innerHTML = humidity;
           document.getElementById("sunriseAdditionalValue").innerHTML = sunrise;
           document.getElementById("sunsetAdditionalValue").innerHTML = sunset;
+
+          // Update weather features with current data
+          if (window.weatherFeatures) {
+            const weatherData = {
+              city: location,
+              country: data.sys?.country || '',
+              coordinates: data.coord || { lat: 0, lon: 0 },
+              temperature: temperature,
+              feels_like: realFeel,
+              humidity: humidity,
+              pressure: pressure,
+              wind_speed: windSpeed,
+              wind_direction: windDirection,
+              visibility: visibility,
+              weather_type: weatherType,
+              weather_description: data.weather[0].description,
+              sunrise: new Date(sunrise * 1000),
+              sunset: new Date(sunset * 1000)
+            };
+            
+            console.log('Saving weather data:', weatherData);
+            window.weatherFeatures.updateCurrentWeather(location, weatherData);
+          }
         }
         else {
+          console.log('City not found or invalid response:', data);
           document.getElementById("locationName").innerHTML = "City Not Found";
           document.getElementById("temperatureValue").innerHTML = "";
           document.getElementById("weatherType").innerHTML = "";
+          document.getElementById("realFeelAdditionalValue").innerHTML = "-";
+          document.getElementById("windSpeedAdditionalValue").innerHTML = "-";
+          document.getElementById("windDirectionAdditionalValue").innerHTML = "-";
+          document.getElementById("visibilityAdditionalValue").innerHTML = "-";
+          document.getElementById("pressureAdditionalValue").innerHTML = "-";
+          document.getElementById("maxTemperatureAdditionalValue").innerHTML = "-";
+          document.getElementById("minTemperatureAdditionalValue").innerHTML = "-";
+          document.getElementById("humidityAdditionalValue").innerHTML = "-";
+          document.getElementById("sunriseAdditionalValue").innerHTML = "-";
+          document.getElementById("sunsetAdditionalValue").innerHTML = "-";
         }
+      } catch (error) {
+        console.error('Error fetching weather data:', error);
+        document.getElementById("locationName").innerHTML = "Error fetching weather";
+        document.getElementById("temperatureValue").innerHTML = "";
+        document.getElementById("weatherType").innerHTML = "";
+        document.getElementById("realFeelAdditionalValue").innerHTML = "-";
+        document.getElementById("windSpeedAdditionalValue").innerHTML = "-";
+        document.getElementById("windDirectionAdditionalValue").innerHTML = "-";
+        document.getElementById("visibilityAdditionalValue").innerHTML = "-";
+        document.getElementById("pressureAdditionalValue").innerHTML = "-";
+        document.getElementById("maxTemperatureAdditionalValue").innerHTML = "-";
+        document.getElementById("minTemperatureAdditionalValue").innerHTML = "-";
+        document.getElementById("humidityAdditionalValue").innerHTML = "-";
+        document.getElementById("sunriseAdditionalValue").innerHTML = "-";
+        document.getElementById("sunsetAdditionalValue").innerHTML = "-";
+      }
       }
 
       getWeather();

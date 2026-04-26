@@ -10,6 +10,7 @@
   <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
 
   <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/features.css">
   <link rel="prefetch" href="media/day1.jpg">
   <link rel="prefetch" href="media/day2.jpg">
   <link rel="prefetch" href="media/day3.jpg">
@@ -149,17 +150,39 @@
   <br>
   <!-- <div class="separator"></div> -->
 
-  <div class="daily-forecast">
+  <div class="features-section">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('forecast')">Forecast</button>
+      <button class="tab-btn" onclick="showTab('history')">History</button>
+      <button class="tab-btn" onclick="showTab('favorites')">Favorites</button>
+      <button class="tab-btn" onclick="showTab('trends')">Trends</button>
+    </div>
 
-    <h2 class="daily-forecast-label">Daily</h2>
+    <!-- Forecast Tab -->
+    <div id="forecast-tab" class="tab-content active">
+      <div class="daily-forecast">
+        <h2 class="daily-forecast-label">Daily</h2>
+        <div id="forecast-container" class="forecast-container">
+          <!-- 
+            <div class="daily-forecast-card">
+              <p class="daily-forecast-date">Fri 27</p>
+              <div class="daily-forecast-logo"><img class="imgs-as-icons" src="icons/sunny.png"></div>
+              <div class="max-min-temperature-daily-forecast">
+                <span class="max-daily-forecast">37<sup>o</sup>C</span>
+                <span class="min-daily-forecast">25<sup>o</sup>C</span>
+              </div>
+              <p class="weather-type-daily-forecast">Sunny</p>
+            </div>
 
-    <div id="forecast-container" class="forecast-container">
-      <!-- 
-        <div class="daily-forecast-card">
-          <p class="daily-forecast-date">Fri 27</p>
-          <div class="daily-forecast-logo"><img class="imgs-as-icons" src="icons/sunny.png"></div>
-          <div class="max-min-temperature-daily-forecast">
-            <span class="max-daily-forecast">37<sup>o</sup>C</span>
+            <div class="daily-forecast-card">
+              <p class="daily-forecast-date">Fri 27</p>
+              <div class="daily-forecast-logo"><img class="imgs-as-icons" src="icons/sunny.png"></div>
+              <div class="max-min-temperature-daily-forecast">
+                <span class="max-daily-forecast">37<sup>o</sup>C</span>
+                <span class="min-daily-forecast">25<sup>o</sup>C</span>
+              </div>
+              <p class="weather-type-daily-forecast">Sunny</p>
+            </div>
             <span class="min-daily-forecast">25<sup>o</sup>C</span>
           </div>
           <p class="weather-type-daily-forecast">Sunny</p>
@@ -213,10 +236,53 @@
             <span class="min-daily-forecast">25<sup>o</sup>C</span>
           </div>
           <p class="weather-type-daily-forecast">Sunny</p>
-        </div> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- History Tab -->
+    <div id="history-tab" class="tab-content">
+      <h2 class="tab-title">Weather History</h2>
+      <div class="history-controls">
+                <button onclick="loadHistory()">Load History</button>
+      </div>
+      <div id="history-container" class="history-container">
+        <p class="no-data">Search for cities to build your weather history!</p>
+      </div>
+    </div>
+
+    <!-- Favorites Tab -->
+    <div id="favorites-tab" class="tab-content">
+      <h2 class="tab-title">Favorite Cities</h2>
+      <div class="favorites-controls">
+        <button onclick="loadFavorites()">Refresh Favorites</button>
+      </div>
+      <div id="favorites-container" class="favorites-container">
+        <p class="no-data">No favorite cities yet. Search and add cities to favorites!</p>
+      </div>
+    </div>
+
+    <!-- Trends Tab -->
+    <div id="trends-tab" class="tab-content">
+      <h2 class="tab-title">Weather Trends</h2>
+      <div class="trends-controls">
+        <input type="text" id="trendsCityInput" placeholder="Enter city for trends...">
+        <select id="trendsDaysSelect">
+          <option value="7">Last 7 days</option>
+          <option value="14">Last 14 days</option>
+          <option value="30">Last 30 days</option>
+        </select>
+        <button onclick="loadTrends()">Load Trends</button>
+      </div>
+      <div id="trends-container" class="trends-container">
+        <p class="no-data">Search for a city to view weather trends</p>
+      </div>
     </div>
   </div>
 
+  <script src="config.js"></script>
+  <script src="scripts/database.js"></script>
+  <script src="scripts/features.js"></script>
   <script src="scripts/script.js"></script>
   <script src="scripts/mobile.js"></script>
   <br><br><br><br><br>
